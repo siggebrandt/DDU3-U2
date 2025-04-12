@@ -18,16 +18,18 @@ const cities = [
   { id: 42, name: "Strasbourg", country: "France" },
 ];
 
+import { serveFile, serveDir } from "jsr:@std/http";
+
 function handler(request) {
   const url = new URL(request.url);
-
-  // if (url.searchParams.has("text") && url.searchParams.has("country")
-
-  //console.log(request);
 
   const headers = new Headers();
   headers.set("Access-Control-Allow-Origin", "*");
   headers.set("Content-Type", "application/json");
+
+  /*   const requestTest = request.json();
+  const fuckU = requestTest.then((element) => element.json());
+  console.log("BODY:", fuckU); */
 
   if (request.method == "GET") {
     if (url.pathname == "/cities") {
@@ -40,40 +42,48 @@ function handler(request) {
     const cityIDRoute = new URLPattern({ pathname: "/cities/:id" });
     const citiesIDPage = cityIDRoute.exec(request.url);
     if (citiesIDPage) {
-      const idOfCity = citiesIDPage.pathname.groups.id;
+      if (url.pathname != "/cities/search") {
+        const idOfCity = citiesIDPage.pathname.groups.id;
 
-      const foundCity = cities.find((element) => element.id == idOfCity);
+        const foundCity = cities.find((element) => element.id == idOfCity);
 
-      if (foundCity != undefined) {
-        return new Response(JSON.stringify(foundCity, null, 2), {
-          status: 200,
-          headers: headers,
-        });
-      } else {
-        return new Response(null, {
-          status: 404,
-          headers: headers,
-        });
-      }
-    }
+        if (foundCity != undefined) {
+          return new Response(JSON.stringify(foundCity, null, 2), {
+            status: 200,
+            headers: headers,
+          });
+        } else {
+          return new Response(null, {
+            status: 404,
+            headers: headers,
+          });
+        }
+      } else if (url.pathname == "/cities/search") {
+        if (url.searchParams.has("text")) {
+          const textFromParam = url.searchParams.get("text");
 
-    if (url.pathname == "/cities/search" && url.searchParams.has("text")) {
-      const textFromParam = url.searchParams.get("text");
+          let matchingCities = cities.filter((element) =>
+            element.name.toLowerCase().includes(textFromParam.toLowerCase())
+          );
 
-      console.log("param", textFromParam);
+          if (url.searchParams.has("country")) {
+            const countryFromParam = url.searchParams.get("country");
 
-      // svarar med array av städerna som inkluderas i text...
-      const matchingCities = cities.filter((element) =>
-        element.name.toLowerCase().includes(textFromParam.toLowerCase())
-      );
-      console.log("matched cities:", matchingCities);
-      return new Response(JSON.stringify(matchingCities, null, 2), {
-        headers: headers,
-      });
+            matchingCities = matchingCities.filter(
+              (element) =>
+                element.country.toLowerCase() == countryFromParam.toLowerCase()
+            );
+          }
 
-      // country
-      if (url.searchParams.has("country")) {
-        // country hello
+          return new Response(JSON.stringify(matchingCities, null, 2), {
+            headers: headers,
+          });
+        } else {
+          return new Response(null, {
+            status: 400,
+            headers: headers,
+          });
+        }
       }
     }
   }
@@ -89,6 +99,9 @@ function handler(request) {
     }
     //
   }
-  return new Response("No Valid request", { status: 400 });
+  if (url.pathname == "/favicon.ico") {
+    return serveFile(request, "public/favicon.png");
+  }
+  return new Response("No Valid request (400)", { status: 400 });
 }
 Deno.serve(handler);
