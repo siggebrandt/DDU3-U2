@@ -20,10 +20,10 @@ const cities = [
 
 function handler(request) {
   const url = new URL(request.url);
-  const cityIDRoute = new URLPattern({ pathname: "/cities/:id" });
+
   // if (url.searchParams.has("text") && url.searchParams.has("country")
 
-  console.log(request);
+  //console.log(request);
 
   const headers = new Headers();
   headers.set("Access-Control-Allow-Origin", "*");
@@ -36,25 +36,59 @@ function handler(request) {
         headers: headers,
       });
     }
+
+    const cityIDRoute = new URLPattern({ pathname: "/cities/:id" });
     const citiesIDPage = cityIDRoute.exec(request.url);
     if (citiesIDPage) {
-      const idOfCity = cityIDRoute.pathname.groups.id;
-      console.log(idOfCity);
-    }
+      const idOfCity = citiesIDPage.pathname.groups.id;
 
-    if (request.method == "POST") {
-      if (url.pathname == "/cities") {
-        //
+      const foundCity = cities.find((element) => element.id == idOfCity);
+
+      if (foundCity != undefined) {
+        return new Response(JSON.stringify(foundCity, null, 2), {
+          status: 200,
+          headers: headers,
+        });
+      } else {
+        return new Response(null, {
+          status: 404,
+          headers: headers,
+        });
       }
     }
 
-    if (request.method == "DELETE") {
-      if (url.pathname == "/cities") {
-        //
+    if (url.pathname == "/cities/search" && url.searchParams.has("text")) {
+      const textFromParam = url.searchParams.get("text");
+
+      console.log("param", textFromParam);
+
+      // svarar med array av städerna som inkluderas i text...
+      const matchingCities = cities.filter((element) =>
+        element.name.toLowerCase().includes(textFromParam.toLowerCase())
+      );
+      console.log("matched cities:", matchingCities);
+      return new Response(JSON.stringify(matchingCities, null, 2), {
+        headers: headers,
+      });
+
+      // country
+      if (url.searchParams.has("country")) {
+        // country hello
       }
+    }
+  }
+  if (request.method == "POST") {
+    if (url.pathname == "/cities") {
       //
     }
   }
-  return new Response("bad request", { status: 400 });
+
+  if (request.method == "DELETE") {
+    if (url.pathname == "/cities") {
+      //
+    }
+    //
+  }
+  return new Response("No Valid request", { status: 400 });
 }
 Deno.serve(handler);
