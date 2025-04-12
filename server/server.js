@@ -20,16 +20,22 @@ const cities = [
 
 import { serveFile, serveDir } from "jsr:@std/http";
 
+function findHighestID(array) {
+  let highestID = 0;
+  for (const element of array) {
+    if (element.id > highestID) {
+      highestID = element.id;
+    }
+  }
+  return highestID;
+}
+
 function handler(request) {
   const url = new URL(request.url);
 
   const headers = new Headers();
   headers.set("Access-Control-Allow-Origin", "*");
   headers.set("Content-Type", "application/json");
-
-  /*   const requestTest = request.json();
-  const fuckU = requestTest.then((element) => element.json());
-  console.log("BODY:", fuckU); */
 
   if (request.method == "GET") {
     if (url.pathname == "/cities") {
@@ -53,7 +59,7 @@ function handler(request) {
             headers: headers,
           });
         } else {
-          return new Response(null, {
+          return new Response("no city with such ID exists", {
             status: 404,
             headers: headers,
           });
@@ -79,7 +85,7 @@ function handler(request) {
             headers: headers,
           });
         } else {
-          return new Response(null, {
+          return new Response('SearchParam "Text" is missig', {
             status: 400,
             headers: headers,
           });
@@ -89,7 +95,42 @@ function handler(request) {
   }
   if (request.method == "POST") {
     if (url.pathname == "/cities") {
-      //
+      request.json().then((requestBody) => {
+        if (requestBody.name && requestBody.country) {
+          console.log(requestBody);
+          // kontrollera om stad med "name" finns,
+          const foundCity = cities.find(
+            (element) =>
+              element.name.toLowerCase() == requestBody.name.toLowerCase()
+          );
+          console.log(foundCity);
+          if (foundCity == undefined) {
+            return new Response(
+              JSON.stringify({
+                id: findHighestID(cities) + 1,
+                name: requestBody.name,
+                country: requestBody.country,
+              }),
+              {
+                status: 200,
+                headers: headers,
+              }
+            );
+          } else {
+            // här har vi ett fel, iv kommer alldrig hit?
+            return new Response("City-name already exists", {
+              status: 409,
+              headers: headers,
+            });
+          }
+        } else {
+          return new Response("Name or Country is missing", {
+            status: 400,
+            headers: headers,
+          });
+        }
+        console.log(requestBody);
+      });
     }
   }
 
