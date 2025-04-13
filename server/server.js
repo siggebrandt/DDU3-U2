@@ -97,13 +97,14 @@ function handler(request) {
     if (url.pathname == "/cities") {
       request.json().then((requestBody) => {
         if (requestBody.name && requestBody.country) {
-          console.log(requestBody);
+          console.log("requestBody", requestBody);
+
           // kontrollera om stad med "name" finns,
           const foundCity = cities.find(
             (element) =>
               element.name.toLowerCase() == requestBody.name.toLowerCase()
           );
-          console.log(foundCity);
+          console.log("foundCity;", foundCity);
           if (foundCity == undefined) {
             return new Response(
               JSON.stringify({
