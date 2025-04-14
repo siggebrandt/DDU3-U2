@@ -95,6 +95,7 @@ function handler(request) {
   }
   if (request.method == "POST") {
     if (url.pathname == "/cities") {
+      // const requestBody = await request.json();
       request.json().then((requestBody) => {
         if (requestBody.name && requestBody.country) {
           console.log("requestBody", requestBody);
@@ -106,6 +107,7 @@ function handler(request) {
           );
           console.log("foundCity;", foundCity);
           if (foundCity == undefined) {
+            // staden finns inte i listan
             return new Response(
               JSON.stringify({
                 id: findHighestID(cities) + 1,
