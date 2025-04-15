@@ -30,7 +30,7 @@ function findHighestID(array) {
   return highestID;
 }
 
-function handler(request) {
+async function handler(request) {
   const url = new URL(request.url);
 
   const headers = new Headers();
@@ -46,7 +46,7 @@ function handler(request) {
     }
 
     const cityIDRoute = new URLPattern({ pathname: "/cities/:id" });
-    const citiesIDPage = cityIDRoute.exec(request.url);
+    const citiesIDPage = cityIDRoute.exec(url);
     if (citiesIDPage) {
       if (url.pathname != "/cities/search") {
         const idOfCity = citiesIDPage.pathname.groups.id;
@@ -59,7 +59,7 @@ function handler(request) {
             headers: headers,
           });
         } else {
-          return new Response("no city with such ID exists", {
+          return new Response(JSON.stringify("no city with such ID exists"), {
             status: 404,
             headers: headers,
           });
@@ -85,7 +85,7 @@ function handler(request) {
             headers: headers,
           });
         } else {
-          return new Response('SearchParam "Text" is missig', {
+          return new Response(JSON.stringify('SearchParam "Text" is missig'), {
             status: 400,
             headers: headers,
           });
@@ -95,57 +95,90 @@ function handler(request) {
   }
   if (request.method == "POST") {
     if (url.pathname == "/cities") {
-      // const requestBody = await request.json();
-      request.json().then((requestBody) => {
-        if (requestBody.name && requestBody.country) {
-          console.log("requestBody", requestBody);
+      if (request.headers.get("Content-Type") != "application/json") {
+        return new Response(JSON.stringify("Invalid Content-Type"), {
+          status: 400,
+        });
+      }
 
-          // kontrollera om stad med "name" finns,
-          const foundCity = cities.find(
-            (element) =>
-              element.name.toLowerCase() == requestBody.name.toLowerCase()
-          );
-          console.log("foundCity;", foundCity);
-          if (foundCity == undefined) {
-            // staden finns inte i listan
-            return new Response(
-              JSON.stringify({
-                id: findHighestID(cities) + 1,
-                name: requestBody.name,
-                country: requestBody.country,
-              }),
-              {
-                status: 200,
-                headers: headers,
-              }
-            );
-          } else {
-            // här har vi ett fel, iv kommer alldrig hit?
-            return new Response("City-name already exists", {
-              status: 409,
-              headers: headers,
-            });
-          }
-        } else {
-          return new Response("Name or Country is missing", {
-            status: 400,
-            headers: headers,
-          });
-        }
-        console.log(requestBody);
-      });
+      const requestBody = await request.json();
+
+      if (!requestBody.name || !requestBody.country) {
+        return new Response(JSON.stringify("Name or Country is missing"), {
+          status: 400,
+          headers: headers,
+        });
+      }
+      // kontrollera om stad med "name" finns,
+      const citiesFound = cities.find(
+        (element) =>
+          element.name.toLowerCase() == requestBody.name.toLowerCase()
+      );
+
+      if (citiesFound == undefined) {
+        // staden finns inte i listan
+        const newCity = {
+          id: findHighestID(cities) + 1,
+          name: requestBody.name,
+          country: requestBody.country,
+        };
+        cities.push(newCity);
+        return new Response(JSON.stringify(newCity), {
+          status: 200,
+          headers: headers,
+        });
+      } else {
+        // staden finns i listan
+        return new Response(JSON.stringify("City-name already exists"), {
+          status: 409,
+          headers: headers,
+        });
+      }
     }
   }
 
   if (request.method == "DELETE") {
     if (url.pathname == "/cities") {
-      //
+      if (request.headers.get("Content-Type") != "application/json") {
+        return new Response(JSON.stringify("Invalid Content-Type"), {
+          status: 400,
+        });
+      }
+
+      const requestID = await request.json();
+
+      if (!requestID.id) {
+        return new Response(JSON.stringify("ID is missing"), {
+          status: 400,
+          headers: headers,
+        });
+      }
+
+      const cityWithIDIndex = cities.findIndex(
+        (element) => element.id == requestID.id
+      );
+
+      if (cityWithIDIndex != -1) {
+        // stad finns
+        cities.splice(cityWithIDIndex, 1);
+        return new Response(JSON.stringify("Delete OK"), {
+          status: 200,
+          headers: headers,
+        });
+      } else {
+        // stad finns inte
+        return new Response(JSON.stringify("No city with such ID"), {
+          status: 404,
+          headers: headers,
+        });
+      }
     }
-    //
   }
-  if (url.pathname == "/favicon.ico") {
+  /* if (url.pathname == "/favicon.ico") {
     return serveFile(request, "public/favicon.png");
-  }
-  return new Response("No Valid request (400)", { status: 400 });
+  } */
+  return new Response(JSON.stringify("No Valid request (400)"), {
+    status: 400,
+  });
 }
 Deno.serve(handler);

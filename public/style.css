@@ -4,3 +4,10 @@
   box-sizing: border-box;
   font-family: Fredoka;
 }
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  background-color: blue;
+  height: 100vh;
+}
