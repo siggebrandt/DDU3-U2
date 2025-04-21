@@ -37,6 +37,15 @@ async function handler(request) {
   headers.set("Access-Control-Allow-Origin", "*");
   headers.set("Content-Type", "application/json");
 
+  if (request.method == "OPTIONS") {
+    headers.set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+    headers.set("Access-Control-Allow-Headers", "Content-Type");
+    return new Response(null, {
+      status: 204,
+      headers: headers,
+    });
+  }
+
   if (request.method == "GET") {
     if (url.pathname == "/cities") {
       return new Response(JSON.stringify(cities, null, 2), {
@@ -98,6 +107,7 @@ async function handler(request) {
       if (request.headers.get("Content-Type") != "application/json") {
         return new Response(JSON.stringify("Invalid Content-Type"), {
           status: 400,
+          headers: headers,
         });
       }
 
@@ -142,6 +152,7 @@ async function handler(request) {
       if (request.headers.get("Content-Type") != "application/json") {
         return new Response(JSON.stringify("Invalid Content-Type"), {
           status: 400,
+          headers: headers,
         });
       }
 
@@ -179,6 +190,7 @@ async function handler(request) {
   } */
   return new Response(JSON.stringify("No Valid request (400)"), {
     status: 400,
+    headers: headers,
   });
 }
 Deno.serve(handler);

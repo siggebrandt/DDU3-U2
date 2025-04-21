@@ -74,6 +74,7 @@ input:focus {
   padding: 10px 45px;
   background-color: lightblue;
   height: 100%;
+  overflow-y: scroll;
 }
 #addCity,
 #searchCity {

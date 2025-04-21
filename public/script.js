@@ -22,6 +22,15 @@ response.then((response) => {
         .appendChild(cityElement);
 
       cityElement.appendChild(cityDeleteButton);
+
+      cityDeleteButton.addEventListener("click", function () {
+        fetch("http://localhost:8000/cities", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: city.id }),
+        });
+        cityElement.remove();
+      });
     }
   });
 });
