@@ -2,12 +2,98 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Fredoka;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border: 0;
 }
 
 main {
   max-width: 1100px;
-  margin: auto;
-  background-color: blue;
   height: 100vh;
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+}
+
+h1 {
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+p {
+  padding-top: 3px;
+}
+
+input {
+  background: 0;
+  margin-left: 5px;
+  border-bottom: 2px solid black;
+}
+input:focus {
+  outline: none;
+  border: 0;
+  border-bottom: 2px solid black;
+}
+
+.margin-a {
+  margin: auto;
+  margin-top: 0;
+}
+
+#listOfCities-container {
+  overflow-y: scroll;
+}
+
+.flex {
+  display: flex;
+}
+
+.flexItem {
+  flex: 1 1 0;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.city {
+  background-color: black;
+  color: white;
+  padding: 5px 11px;
+  border-radius: 8px;
+  margin-bottom: 7px;
+}
+
+.deleteCityButton {
+  color: white;
+  background-color: red;
+  border-radius: 7px;
+  padding: 5px;
+}
+
+#listOfCities {
+  padding: 10px 45px;
+  background-color: lightblue;
+  height: 100%;
+}
+#addCity,
+#searchCity {
+  height: 185px;
+  padding: 20px;
+  background-color: black;
+}
+
+.inputBox {
+  height: 85px;
+  background-color: lightblue;
+  padding: 15px 35px 20px 15px;
+}
+
+#addCityButton,
+#searchCityButton {
+  width: 100%;
+  color: white;
+  background-color: lightseagreen;
+  padding: 15px 0;
+  border-radius: 7px;
+  margin-top: 15px;
 }
