@@ -65,3 +65,12 @@ document
       });
     });
   });
+
+document
+  .querySelector("#searchCityButton")
+  .addEventListener("click", function (event) {
+    /**
+     * Användaren kan söka bland städerna med ”Search Cities”. Om sökningen gick bra (inget HTTP-fel) så visas städerna enligt bilden ovan.
+     * Om sökningen ger en tom array (inga städer uppfyller villkoren) så ska det stå ”No cities found” där listan med hittade städer normalt visas.
+     */
+  });
