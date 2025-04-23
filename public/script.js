@@ -1,43 +1,67 @@
-const request = new Request("http://localhost:8000/cities", { method: "GET" });
+function updateListOfCities() {
+  const response = fetch("http://localhost:8000/cities", { method: "GET" });
+  response.then((response) => {
+    const responseJSON = response.json();
 
-const response = fetch(request);
-response.then((response) => {
-  const responseJSON = response.json();
+    responseJSON.then((responseData) => {
+      document.querySelector("#listOfCities-container").innerHTML = "";
 
-  responseJSON.then((responseData) => {
-    console.log(responseData);
-    // läs in alla här, loop
+      for (let city of responseData) {
+        const cityElement = document.createElement("div");
+        cityElement.textContent = `${city.name}, ${city.country}`;
+        cityElement.classList = "city flex space-between";
 
-    for (let city of responseData) {
-      const cityElement = document.createElement("div");
-      cityElement.textContent = `${city.name}, ${city.country}`;
-      cityElement.classList = "city flex space-between";
+        const cityDeleteButton = document.createElement("button");
+        cityDeleteButton.textContent = "delete";
+        cityDeleteButton.classList = "deleteCityButton";
 
-      const cityDeleteButton = document.createElement("button");
-      cityDeleteButton.textContent = "delete";
-      cityDeleteButton.classList = "deleteCityButton";
+        document
+          .querySelector("#listOfCities-container")
+          .appendChild(cityElement);
 
-      document
-        .querySelector("#listOfCities-container")
-        .appendChild(cityElement);
+        cityElement.appendChild(cityDeleteButton);
 
-      cityElement.appendChild(cityDeleteButton);
-
-      cityDeleteButton.addEventListener("click", function () {
-        fetch("http://localhost:8000/cities", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: city.id }),
+        cityDeleteButton.addEventListener("click", function () {
+          fetch("http://localhost:8000/cities", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: city.id }),
+          });
+          cityElement.remove();
         });
-        cityElement.remove();
-      });
-    }
+      }
+    });
   });
-});
+}
+updateListOfCities();
 
-/* document
-  .querySelector(".deleteCityButton")
+document
+  .querySelector("#addCityButton")
   .addEventListener("click", function (event) {
-    console.log("hej");
+    const inputName = document.querySelector("#inputAddCityName").value;
+    const inputCountry = document.querySelector("#inputAddCityCountry").value;
+
+    const response = fetch("http://localhost:8000/cities", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: inputName,
+        country: inputCountry,
+      }),
+    });
+
+    response.then((response) => {
+      const responseJSON = response.json();
+      if (response.status == 200) {
+        updateListOfCities();
+      }
+      responseJSON.then((responseData) => {
+        if (
+          responseData == "Name or Country is missing" ||
+          responseData == "City-name already exists"
+        ) {
+          alert(responseData);
+        }
+      });
+    });
   });
- */

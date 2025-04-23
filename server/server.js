@@ -185,9 +185,7 @@ async function handler(request) {
       }
     }
   }
-  /* if (url.pathname == "/favicon.ico") {
-    return serveFile(request, "public/favicon.png");
-  } */
+
   return new Response(JSON.stringify("No Valid request (400)"), {
     status: 400,
     headers: headers,
