@@ -78,7 +78,7 @@ input:focus {
 }
 #addCity,
 #searchCity {
-  height: 185px;
+  min-height: 185px;
   padding: 20px;
   background-color: black;
 }
@@ -87,6 +87,14 @@ input:focus {
   height: 85px;
   background-color: lightblue;
   padding: 15px 35px 20px 15px;
+}
+
+#SearchCityResultsBox {
+  margin-top: 20px;
+  height: 125px;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+  padding-top: 10px;
 }
 
 #addCityButton,

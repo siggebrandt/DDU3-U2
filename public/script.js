@@ -66,11 +66,32 @@ document
     });
   });
 
+/**
+ * Användaren kan söka bland städerna med ”Search Cities”. Om sökningen gick bra (inget HTTP-fel) så visas städerna enligt bilden ovan.
+ * Om sökningen ger en tom array (inga städer uppfyller villkoren) så ska det stå ”No cities found” där listan med hittade städer normalt visas.
+ */
+
 document
   .querySelector("#searchCityButton")
   .addEventListener("click", function (event) {
-    /**
-     * Användaren kan söka bland städerna med ”Search Cities”. Om sökningen gick bra (inget HTTP-fel) så visas städerna enligt bilden ovan.
-     * Om sökningen ger en tom array (inga städer uppfyller villkoren) så ska det stå ”No cities found” där listan med hittade städer normalt visas.
-     */
+    const inputText = document.querySelector("#inputSearchCityText").value;
+    const inputCountry = document.querySelector(
+      "#inputSearchCityCountry"
+    ).value;
+
+    //
+
+    const response = fetch("http://localhost:8000/cities", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: inputName,
+        country: inputCountry,
+      }),
+    });
+
+    //
+
+    document.querySelector("#SearchCityResults").innerHTML = `
+    <div class="inputBox" id="SearchCityResultsBox"></div>`;
   });
