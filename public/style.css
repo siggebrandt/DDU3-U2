@@ -70,7 +70,7 @@ input:focus {
 
 .deleteCityButton {
   color: white;
-  background-color: red;
+  background-color: rgb(238, 53, 53);
   border-radius: 7px;
   padding: 5px;
 }
