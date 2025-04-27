@@ -4,20 +4,24 @@ function updateListOfCities() {
     const responseJSON = response.json();
 
     responseJSON.then((responseData) => {
-      document.querySelector("#listOfCities-container").innerHTML = "";
+      const listOfCitiesContainer = document.querySelector(
+        "#listOfCities-container"
+      );
+
+      listOfCitiesContainer.innerHTML = "";
 
       for (let city of responseData) {
         const cityElement = document.createElement("div");
-        cityElement.textContent = `${city.name}, ${city.country}`;
         cityElement.classList = "city flex space-between";
+        listOfCitiesContainer.appendChild(cityElement);
+
+        const cityElementText = document.createElement("p");
+        cityElementText.textContent = `${city.name}, ${city.country}`;
+        cityElement.appendChild(cityElementText);
 
         const cityDeleteButton = document.createElement("button");
         cityDeleteButton.textContent = "delete";
         cityDeleteButton.classList = "deleteCityButton";
-
-        document
-          .querySelector("#listOfCities-container")
-          .appendChild(cityElement);
 
         cityElement.appendChild(cityDeleteButton);
 
@@ -66,11 +70,6 @@ document
     });
   });
 
-/**
- * Användaren kan söka bland städerna med ”Search Cities”. Om sökningen gick bra (inget HTTP-fel) så visas städerna enligt bilden ovan.
- * Om sökningen ger en tom array (inga städer uppfyller villkoren) så ska det stå ”No cities found” där listan med hittade städer normalt visas.
- */
-
 document
   .querySelector("#searchCityButton")
   .addEventListener("click", function (event) {
@@ -79,19 +78,48 @@ document
       "#inputSearchCityCountry"
     ).value;
 
-    //
+    let response;
 
-    const response = fetch("http://localhost:8000/cities", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: inputName,
-        country: inputCountry,
-      }),
+    console.log(inputText);
+    console.log(inputCountry);
+
+    if (inputCountry) {
+      response = fetch(
+        `http://localhost:8000/cities/search?text=${inputText}&country=${inputCountry}`
+      );
+    } else if (inputText) {
+      response = fetch(`http://localhost:8000/cities/search?text=${inputText}`);
+    } else {
+      return alert('"Text" is missig');
+    }
+
+    document.querySelector("#searchCityResults").innerHTML = `
+    <div class="inputBox" id="searchCityResultsBox"></div>`;
+
+    response.then((response) => {
+      const responseJSON = response.json();
+      const searchCityResultsBox = document.querySelector(
+        "#searchCityResultsBox"
+      );
+      searchCityResultsBox.innerHTML = "";
+
+      responseJSON.then((responseData) => {
+        console.log(responseData);
+
+        for (let city of responseData) {
+          const cityElement = document.createElement("div");
+          cityElement.textContent = `${city.name}, ${city.country}`;
+          cityElement.classList = "city";
+
+          document
+            .querySelector("#searchCityResultsBox")
+            .appendChild(cityElement);
+        }
+
+        if (responseData.length == 0) {
+          searchCityResultsBox.textContent = "No cities found";
+          searchCityResultsBox.style.textAlign = "center";
+        }
+      });
     });
-
-    //
-
-    document.querySelector("#SearchCityResults").innerHTML = `
-    <div class="inputBox" id="SearchCityResultsBox"></div>`;
   });

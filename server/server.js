@@ -18,8 +18,6 @@ const cities = [
   { id: 42, name: "Strasbourg", country: "France" },
 ];
 
-import { serveFile, serveDir } from "jsr:@std/http";
-
 function findHighestID(array) {
   let highestID = 0;
   for (const element of array) {
@@ -91,10 +89,11 @@ async function handler(request) {
           }
 
           return new Response(JSON.stringify(matchingCities, null, 2), {
+            status: 200,
             headers: headers,
           });
         } else {
-          return new Response(JSON.stringify('SearchParam "Text" is missig'), {
+          return new Response(JSON.stringify('"Text" is missig'), {
             status: 400,
             headers: headers,
           });
@@ -119,14 +118,12 @@ async function handler(request) {
           headers: headers,
         });
       }
-      // kontrollera om stad med "name" finns,
       const citiesFound = cities.find(
         (element) =>
           element.name.toLowerCase() == requestBody.name.toLowerCase()
       );
 
       if (citiesFound == undefined) {
-        // staden finns inte i listan
         const newCity = {
           id: findHighestID(cities) + 1,
           name: requestBody.name,
@@ -138,7 +135,6 @@ async function handler(request) {
           headers: headers,
         });
       } else {
-        // staden finns i listan
         return new Response(JSON.stringify("City-name already exists"), {
           status: 409,
           headers: headers,
@@ -170,14 +166,12 @@ async function handler(request) {
       );
 
       if (cityWithIDIndex != -1) {
-        // stad finns
         cities.splice(cityWithIDIndex, 1);
         return new Response(JSON.stringify("Delete OK"), {
           status: 200,
           headers: headers,
         });
       } else {
-        // stad finns inte
         return new Response(JSON.stringify("No city with such ID"), {
           status: 404,
           headers: headers,
