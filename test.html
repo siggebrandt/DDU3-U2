@@ -16,8 +16,8 @@
           response
             .json()
             .then((resource) => console.log("Request 1:", resource));
+          request2();
         });
-        request2();
       }
 
       function request2() {
@@ -38,9 +38,9 @@
               `city "${resource.name}" in country "${resource.country}" is now added`,
               resource
             );
+            request3();
           });
         });
-        request3();
       }
 
       function request3() {
@@ -54,15 +54,48 @@
           if (response.status != 200) {
             return console.log(`Request 3: Error (${response.status})`);
           }
-          response.json().then((resource) => {
-            console.log("Request 3:", resource);
-          });
+          response
+            .json()
+            .then((resource) => console.log("Request 3:", resource));
+          request4();
         });
-        request4();
       }
 
       function request4() {
-        //
+        fetch("http://localhost:8000/cities").then((response) => {
+          if (response.status != 200) {
+            return console.log(`Request 4: Error (${response.status})`);
+          }
+          response
+            .json()
+            .then((resource) => console.log("Request 4:", resource));
+          request5();
+        });
+      }
+
+      function request5() {
+        fetch("http://localhost:8000/cities/43").then((response) => {
+          if (response.status != 200) {
+            return console.log(`Request 5: Error (${response.status})`);
+          }
+          response
+            .json()
+            .then((resource) => console.log("Request 5:", resource));
+          request6();
+        });
+      }
+
+      function request6() {
+        fetch("http://localhost:8000/cities/search?text=en").then(
+          (response) => {
+            if (response.status != 200) {
+              return console.log(`Request 6: Error (${response.status})`);
+            }
+            response
+              .json()
+              .then((resource) => console.log("Request 6:", resource));
+          }
+        );
       }
     </script>
   </body>
