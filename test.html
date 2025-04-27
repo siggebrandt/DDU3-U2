@@ -3,11 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Test</title>
   </head>
   <body>
     <script>
-      //
+      request1();
+      function request1() {
+        fetch("http://localhost:8000/cities").then((response) => {
+          if (response.status != 200) {
+            return console.log(`Request 1: Error (${response.status})`);
+          }
+          response
+            .json()
+            .then((resource) => console.log("Request 1:", resource));
+        });
+        request2();
+      }
+
+      function request2() {
+        fetch("http://localhost:8000/cities", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: "Malmö",
+            country: "Sweden",
+          }),
+        }).then((response) => {
+          if (response.status != 200) {
+            return console.log(`Request 2: Error (${response.status})`);
+          }
+          response.json().then((resource) => {
+            console.log(
+              "Request 2:",
+              `city "${resource.name}" in country "${resource.country}" is now added`,
+              resource
+            );
+          });
+        });
+        request3();
+      }
+
+      function request3() {
+        fetch("http://localhost:8000/cities", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: 2,
+          }),
+        }).then((response) => {
+          if (response.status != 200) {
+            return console.log(`Request 3: Error (${response.status})`);
+          }
+          response.json().then((resource) => {
+            console.log("Request 3:", resource);
+          });
+        });
+        request4();
+      }
+
+      function request4() {
+        //
+      }
     </script>
   </body>
 </html>
