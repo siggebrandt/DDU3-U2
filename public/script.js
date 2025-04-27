@@ -10,7 +10,7 @@ function updateListOfCities() {
 
       listOfCitiesContainer.innerHTML = "";
 
-      for (let city of responseData) {
+      for (const city of responseData) {
         const cityElement = document.createElement("div");
         cityElement.classList = "city flex space-between";
         listOfCitiesContainer.appendChild(cityElement);
@@ -39,40 +39,38 @@ function updateListOfCities() {
 }
 updateListOfCities();
 
-document
-  .querySelector("#addCityButton")
-  .addEventListener("click", function (event) {
-    const inputName = document.querySelector("#inputAddCityName").value;
-    const inputCountry = document.querySelector("#inputAddCityCountry").value;
+document.querySelector("#addCityButton").addEventListener("click", function () {
+  const inputName = document.querySelector("#inputAddCityName").value;
+  const inputCountry = document.querySelector("#inputAddCityCountry").value;
 
-    const response = fetch("http://localhost:8000/cities", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: inputName,
-        country: inputCountry,
-      }),
-    });
+  const response = fetch("http://localhost:8000/cities", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: inputName,
+      country: inputCountry,
+    }),
+  });
 
-    response.then((response) => {
-      const responseJSON = response.json();
-      if (response.status == 200) {
-        updateListOfCities();
+  response.then((response) => {
+    const responseJSON = response.json();
+    if (response.status == 200) {
+      updateListOfCities();
+    }
+    responseJSON.then((responseData) => {
+      if (
+        responseData == "Name or Country is missing" ||
+        responseData == "City-name already exists"
+      ) {
+        alert(responseData);
       }
-      responseJSON.then((responseData) => {
-        if (
-          responseData == "Name or Country is missing" ||
-          responseData == "City-name already exists"
-        ) {
-          alert(responseData);
-        }
-      });
     });
   });
+});
 
 document
   .querySelector("#searchCityButton")
-  .addEventListener("click", function (event) {
+  .addEventListener("click", function () {
     const inputText = document.querySelector("#inputSearchCityText").value;
     const inputCountry = document.querySelector(
       "#inputSearchCityCountry"
@@ -106,7 +104,7 @@ document
       responseJSON.then((responseData) => {
         console.log(responseData);
 
-        for (let city of responseData) {
+        for (const city of responseData) {
           const cityElement = document.createElement("div");
           cityElement.textContent = `${city.name}, ${city.country}`;
           cityElement.classList = "city";
