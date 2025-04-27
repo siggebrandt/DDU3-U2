@@ -94,9 +94,88 @@
             response
               .json()
               .then((resource) => console.log("Request 6:", resource));
+            request7();
           }
         );
       }
+      function request7() {
+        fetch(
+          "http://localhost:8000/cities/search?text=en&country=Sweden"
+        ).then((response) => {
+          if (response.status != 200) {
+            return console.log(`Request 7: Error (${response.status})`);
+          }
+          response
+            .json()
+            .then((resource) => console.log("Request 7:", resource));
+          requestErrorsManagement();
+        });
+      }
+      async function requestErrorsManagement() {
+        await request8();
+        await request9();
+        await request10();
+        await request11();
+        await request12();
+        await request13();
+        await request14();
+      }
+
+      async function request8() {
+        const response = await fetch("http://localhost:8000/cities", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: "Dresden",
+            country: "Germany",
+          }),
+        });
+        if (response.status == 409) {
+          const resource = await response.json();
+          console.log("Request 8:", resource);
+        }
+      }
+
+      async function request9() {
+        const response = await fetch("http://localhost:8000/cities", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: "Ystad",
+          }),
+        });
+        if (response.status == 400) {
+          const resource = await response.json();
+          console.log("Request 9:", resource);
+        }
+      }
+      async function request10() {
+        const response = await fetch("http://localhost:8000/cities", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: 56,
+          }),
+        });
+        if (response.status == 404) {
+          const resource = await response.json();
+          console.log("Request 10:", resource);
+        }
+      }
+      async function request11() {
+        const response = await fetch("http://localhost:8000/cities", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        });
+        if (response.status == 400) {
+          const resource = await response.json();
+          console.log("Request 11:", resource);
+        }
+      }
+      async function request12() {}
+      async function request13() {}
+      async function request14() {}
     </script>
   </body>
 </html>
