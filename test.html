@@ -173,9 +173,38 @@
           console.log("Request 11:", resource);
         }
       }
-      async function request12() {}
-      async function request13() {}
-      async function request14() {}
+      async function request12() {
+        const response = await fetch("http://localhost:8000/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: 2,
+            to: 1,
+            password: "pass",
+          }),
+        });
+        if (response.status == 400) {
+          const resource = await response.json();
+          console.log("Request 12:", resource);
+        }
+      }
+      async function request13() {
+        const response = await fetch("http://localhost:8000/cities/search");
+
+        if (response.status == 400) {
+          const resource = await response.json();
+          console.log("Request 13:", resource);
+        }
+      }
+      async function request14() {
+        const response = await fetch("http://localhost:8000/mordor", {
+          method: "DELETE",
+        });
+        if (response.status == 400) {
+          const resource = await response.json();
+          console.log("Request 14:", resource);
+        }
+      }
     </script>
   </body>
 </html>
