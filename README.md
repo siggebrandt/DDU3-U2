@@ -10,4 +10,4 @@ Projektet består av en Deno-server som hanterar en intern array av städer och 
 Det färdiga projektet finns tillgängligt på ett flertal olika källor,
 
 - [GitHub Repository](https://github.com/siggebrandt/DDU3-U2)
-- [Webbplats (Deno Deploy)](https://siggebrandt-ddu3-u2.deno.dev)
+[//]: # (- [Webbplats (Deno Deploy)](https://siggebrandt-ddu3-u2.deno.dev))
