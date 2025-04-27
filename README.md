@@ -3,7 +3,7 @@
 
 ## Beskrivning
 
---
+Projektet består av en Deno-server som hanterar en intern array av städer och accepterar CORS-förfrågningar. En testwebbsida skickar ett antal specifika förfrågningar till servern och kontrollerar svaren. Projektet innehåller också en frontend där användaren kan lägga till, ta bort och söka efter städer.
 
 ## Redovisning
 
