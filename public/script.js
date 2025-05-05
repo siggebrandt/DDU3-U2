@@ -1,6 +1,6 @@
 const websiteURL = "https://siggebrandt-ddu3-u2-beta.deno.dev/"; // http://localhost:8000/cities
 function updateListOfCities() {
-  const response = fetch(websiteURL, { method: "GET" });
+  const response = fetch(`${websiteURL}/cities`, { method: "GET" });
   response.then((response) => {
     const responseJSON = response.json();
 
@@ -27,7 +27,7 @@ function updateListOfCities() {
         cityElement.appendChild(cityDeleteButton);
 
         cityDeleteButton.addEventListener("click", function () {
-          fetch(websiteURL, {
+          fetch(`${websiteURL}/cities`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: city.id }),
@@ -44,7 +44,7 @@ document.querySelector("#addCityButton").addEventListener("click", function () {
   const inputName = document.querySelector("#inputAddCityName").value;
   const inputCountry = document.querySelector("#inputAddCityCountry").value;
 
-  const response = fetch(websiteURL, {
+  const response = fetch(`${websiteURL}/cities`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -84,10 +84,10 @@ document
 
     if (inputCountry) {
       response = fetch(
-        `http://localhost:8000/cities/search?text=${inputText}&country=${inputCountry}`
+        `${websiteURL}/cities/search?text=${inputText}&country=${inputCountry}`
       );
     } else if (inputText) {
-      response = fetch(`http://localhost:8000/cities/search?text=${inputText}`);
+      response = fetch(`${websiteURL}/cities/search?text=${inputText}`);
     } else {
       return alert('"Text" is missig');
     }
