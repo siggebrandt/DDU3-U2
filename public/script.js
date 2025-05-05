@@ -1,5 +1,6 @@
+const websiteURL = "https://siggebrandt-ddu3-u2-beta.deno.dev/"; // http://localhost:8000/cities
 function updateListOfCities() {
-  const response = fetch("http://localhost:8000/cities", { method: "GET" });
+  const response = fetch(websiteURL, { method: "GET" });
   response.then((response) => {
     const responseJSON = response.json();
 
@@ -26,7 +27,7 @@ function updateListOfCities() {
         cityElement.appendChild(cityDeleteButton);
 
         cityDeleteButton.addEventListener("click", function () {
-          fetch("http://localhost:8000/cities", {
+          fetch(websiteURL, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: city.id }),
@@ -43,7 +44,7 @@ document.querySelector("#addCityButton").addEventListener("click", function () {
   const inputName = document.querySelector("#inputAddCityName").value;
   const inputCountry = document.querySelector("#inputAddCityCountry").value;
 
-  const response = fetch("http://localhost:8000/cities", {
+  const response = fetch(websiteURL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
