@@ -48,7 +48,10 @@ async function handler(request) {
 
   if (request.method == "GET") {
     if (url.pathname == "/") {
-      return serveFile("../public/index.html");
+      return serveFile(
+        request,
+        new URL("../public/index.html", import.meta.url)
+      );
     }
     if (
       url.pathname == "/" ||
@@ -57,7 +60,14 @@ async function handler(request) {
       url.pathname == "/favicon.png" ||
       url.pathname == "/Nunito.ttf"
     ) {
-      return await serveDir(request, { fsRoot: "./" });
+      return await serveFile(
+        request,
+        new URL(
+          `../public${url.pathname === "/" ? "/index.html" : url.pathname}`,
+          import.meta.url
+        )
+      );
+      //return await serveDir(request, { fsRoot: "./" });
       //return await serveDir("../public/index.html");
     }
 
