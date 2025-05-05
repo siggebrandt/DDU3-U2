@@ -57,9 +57,9 @@ async function handler(request) {
       return await serveDir(request, { fsRoot: "./" });
       //return await serveDir("../public/index.html");
     }
-    /* if (url.pathname == "/script.js") {
-      return await serveFile("../public/script.js");
-    } */
+    if (url.pathname == "/") {
+      return serveFile("../public/index.html");
+    }
 
     if (url.pathname == "/cities") {
       return new Response(JSON.stringify(cities, null, 2), {
