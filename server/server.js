@@ -57,6 +57,7 @@ async function handler(request) {
       url.pathname == "/script.js" ||
       url.pathname == "/style.css" ||
       url.pathname == "/favicon.ico" ||
+      url.pathname == "/favicon.png" ||
       url.pathname == "/Nunito.ttf"
     ) {
       return await serveDir(request, {
