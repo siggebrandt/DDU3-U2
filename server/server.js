@@ -48,10 +48,10 @@ async function handler(request) {
 
   if (request.method == "GET") {
     if (url.pathname == "/") {
-      return serveFile(
-        request,
+      const filePath = fromFileUrl(
         new URL("../public/index.html", import.meta.url)
       );
+      return serveFile(request, filePath);
     }
     if (
       url.pathname == "/" ||
