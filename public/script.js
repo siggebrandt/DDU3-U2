@@ -1,5 +1,6 @@
+const websiteURL = "https://siggebrandt-ddu3-u2-beta.deno.dev"; // http://localhost:8000/cities
 function updateListOfCities() {
-  const response = fetch("http://localhost:8000/cities", { method: "GET" });
+  const response = fetch(`${websiteURL}/cities`, { method: "GET" });
   response.then((response) => {
     const responseJSON = response.json();
 
@@ -26,7 +27,7 @@ function updateListOfCities() {
         cityElement.appendChild(cityDeleteButton);
 
         cityDeleteButton.addEventListener("click", function () {
-          fetch("http://localhost:8000/cities", {
+          fetch(`${websiteURL}/cities`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: city.id }),
@@ -43,7 +44,7 @@ document.querySelector("#addCityButton").addEventListener("click", function () {
   const inputName = document.querySelector("#inputAddCityName").value;
   const inputCountry = document.querySelector("#inputAddCityCountry").value;
 
-  const response = fetch("http://localhost:8000/cities", {
+  const response = fetch(`${websiteURL}/cities`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -78,15 +79,12 @@ document
 
     let response;
 
-    console.log(inputText);
-    console.log(inputCountry);
-
     if (inputCountry) {
       response = fetch(
-        `http://localhost:8000/cities/search?text=${inputText}&country=${inputCountry}`
+        `${websiteURL}/cities/search?text=${inputText}&country=${inputCountry}`
       );
     } else if (inputText) {
-      response = fetch(`http://localhost:8000/cities/search?text=${inputText}`);
+      response = fetch(`${websiteURL}/cities/search?text=${inputText}`);
     } else {
       return alert('"Text" is missig');
     }
@@ -102,8 +100,6 @@ document
       searchCityResultsBox.innerHTML = "";
 
       responseJSON.then((responseData) => {
-        console.log(responseData);
-
         for (const city of responseData) {
           const cityElement = document.createElement("div");
           cityElement.textContent = `${city.name}, ${city.country}`;

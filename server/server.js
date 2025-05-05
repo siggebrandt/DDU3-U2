@@ -1,3 +1,5 @@
+import { serveFile, serveDir } from "jsr:@std/http";
+
 const cities = [
   { id: 2, name: "Lille", country: "France" },
   { id: 3, name: "Nantes", country: "France" },
@@ -45,6 +47,24 @@ async function handler(request) {
   }
 
   if (request.method == "GET") {
+    if (url.pathname == "/") {
+      const filePath = new URL("../public/index.html", import.meta.url)
+        .pathname;
+      return await serveFile(request, filePath);
+    }
+    if (
+      url.pathname == "/" ||
+      url.pathname == "/script.js" ||
+      url.pathname == "/style.css" ||
+      url.pathname == "/favicon.ico" ||
+      url.pathname == "/favicon.png" ||
+      url.pathname == "/Nunito.ttf"
+    ) {
+      return await serveDir(request, {
+        fsRoot: new URL("../public", import.meta.url).pathname,
+      });
+    }
+
     if (url.pathname == "/cities") {
       return new Response(JSON.stringify(cities, null, 2), {
         status: 200,
