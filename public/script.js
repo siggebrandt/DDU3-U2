@@ -79,9 +79,6 @@ document
 
     let response;
 
-    console.log(inputText);
-    console.log(inputCountry);
-
     if (inputCountry) {
       response = fetch(
         `${websiteURL}/cities/search?text=${inputText}&country=${inputCountry}`
@@ -103,8 +100,6 @@ document
       searchCityResultsBox.innerHTML = "";
 
       responseJSON.then((responseData) => {
-        console.log(responseData);
-
         for (const city of responseData) {
           const cityElement = document.createElement("div");
           cityElement.textContent = `${city.name}, ${city.country}`;
