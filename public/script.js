@@ -1,4 +1,4 @@
-const websiteURL = "https://siggebrandt-ddu3-u2-beta.deno.dev/"; // http://localhost:8000/cities
+const websiteURL = "https://siggebrandt-ddu3-u2-beta.deno.dev"; // http://localhost:8000/cities
 function updateListOfCities() {
   const response = fetch(`${websiteURL}/cities`, { method: "GET" });
   response.then((response) => {
