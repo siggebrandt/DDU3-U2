@@ -47,6 +47,9 @@ async function handler(request) {
   }
 
   if (request.method == "GET") {
+    if (url.pathname == "/") {
+      return serveFile("../public/index.html");
+    }
     if (
       url.pathname == "/" ||
       url.pathname == "/script.js" ||
@@ -56,9 +59,6 @@ async function handler(request) {
     ) {
       return await serveDir(request, { fsRoot: "./" });
       //return await serveDir("../public/index.html");
-    }
-    if (url.pathname == "/") {
-      return serveFile("../public/index.html");
     }
 
     if (url.pathname == "/cities") {
